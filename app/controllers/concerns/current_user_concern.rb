@@ -2,7 +2,7 @@ module CurrentUserConcern
   extend ActiveSupport::Concern
 
   included do
-    befor_action :set_current_user
+    before_action :set_current_user
   end
 
   def set_current_user
