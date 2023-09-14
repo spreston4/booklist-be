@@ -11,6 +11,7 @@ class RegistrationsController < ApplicationController
     user = User.new(user_params)
 
     if user.save
+      Wishlist.create(user: user)
       session[:user_id] = user.id
       render json: {
         status: :created,
