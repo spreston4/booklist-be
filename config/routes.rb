@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     member do
       get 'get_wishlist', to: 'user#get_wishlist'
       post 'add_to_wishlist', to: 'user#add_to_wishlist'
+      delete 'remove_from_wishlist', to: 'user#remove_from_wishlist'
     end
   end
 
