@@ -13,6 +13,9 @@ Rails.application.routes.draw do
       get 'get_wishlist', to: 'user#get_wishlist'
       post 'add_to_wishlist', to: 'user#add_to_wishlist'
       delete 'remove_from_wishlist', to: 'user#remove_from_wishlist'
+      get 'get_readlist', to: 'user#get_readlist'
+      post 'add_to_readlist', to: 'user#add_to_readlist'
+      delete 'remove_from_readlist', to: 'user#remove_from_readlist'
     end
   end
 

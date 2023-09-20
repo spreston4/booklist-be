@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_14_174433) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_15_135059) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,9 +22,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_14_174433) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "books_readlists", id: false, force: :cascade do |t|
+    t.bigint "readlist_id", null: false
+    t.bigint "book_id", null: false
+  end
+
   create_table "books_wishlists", id: false, force: :cascade do |t|
     t.bigint "wishlist_id", null: false
     t.bigint "book_id", null: false
+  end
+
+  create_table "readlists", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_readlists_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -41,5 +53,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_14_174433) do
     t.index ["user_id"], name: "index_wishlists_on_user_id"
   end
 
+  add_foreign_key "readlists", "users"
   add_foreign_key "wishlists", "users"
 end
