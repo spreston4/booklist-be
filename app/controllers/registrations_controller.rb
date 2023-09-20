@@ -1,10 +1,7 @@
 class RegistrationsController < ApplicationController
   def create
     if User.find_by(email: params["user"]["email"])
-      render json: {
-        status: 409,
-        message: "User already exists"
-      }
+      render_duplicate_record
       return
     end
     

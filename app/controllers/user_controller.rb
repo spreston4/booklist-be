@@ -1,8 +1,9 @@
 class UserController < ApplicationController
+  before_action :set_user
+  before_action :set_book, except: [:get_wishlist, :get_readlist]
   
   def get_wishlist
-    user = User.find(params["id"])
-    wishlist_data = user.wishlist.books
+    wishlist_data = @user.wishlist.books
   
     render json: {
       books: wishlist_data
@@ -10,34 +11,27 @@ class UserController < ApplicationController
   end
 
   def add_to_wishlist
-    user = User.find(params["id"])
-    book = Book.find(params["book"]["id"])
-
-    return unless user && book
-    if user.wishlist.books.exists?(book.id)
-      render json: {status: "Book already exists on wishlist"}
+    return unless @user && @book
+    if @user.wishlist.books.exists?(@book.id)
+      render_error("Book already exists on wishlist.")
     else
-      user.wishlist.books << book
-      render json: {status: "Success"}
+      @user.wishlist.books << @book
+      render_success("Book successfully added to wishlist!")
     end
   end  
   
   def remove_from_wishlist
-    user = User.find(params["id"])
-    book = Book.find(params["book"]["id"])
-
-    return unless user && book
-    if user.wishlist.books.exists?(book.id)
-      user.wishlist.books.delete(book)
-      render json: {status: "Success"}
+    return unless @user && @book
+    if @user.wishlist.books.exists?(@book.id)
+      @user.wishlist.books.delete(@book)
+      render_success("Book removed from wishlist.")
     else
-      render json: {status: "Book does not exist on wishlist"}
+      render_error("Book does not exist on wishlist.")
     end
   end
 
   def get_readlist
-    user = User.find(params["id"])
-    readlistlist_data = user.readlist.books
+    readlistlist_data = @user.readlist.books
   
     render json: {
       books: readlist_data
@@ -45,28 +39,34 @@ class UserController < ApplicationController
   end
 
   def add_to_readlist
-    user = User.find(params["id"])
-    book = Book.find(params["book"]["id"])
-
-    return unless user && book
-    if user.readlist.books.exists?(book.id)
-      render json: {status: "Book already exists on readlist"}
+    return unless @user && @book
+    if @user.readlist.books.exists?(@book.id)
+      render_error("Book already exists on readlist.")
     else
-      user.readlist.books << book
-      render json: {status: "Success"}
+      @user.readlist.books << @book
+      render_success("Book successfully added to readlist!")
     end
   end 
 
   def remove_from_readlist
-    user = User.find(params["id"])
-    book = Book.find(params["book"]["id"])
-
-    return unless user && book
-    if user.readlist.books.exists?(book.id)
-      user.readlist.books.delete(book)
-      render json: {status: "Success"}
+    return unless @user && @book
+    if @user.readlist.books.exists?(@book.id)
+      @user.readlist.books.delete(@book)
+      render_success("Book removed from readlist.")
     else
-      render json: {status: "Book does not exist on readlist"}
+      render_error("Book does not exist on readlist.")
     end
+  end
+
+  private
+
+  def set_user
+    @user = User.find_by(id: params["id"])
+    render_not_found unless @user
+  end
+
+  def set_book
+    @book = Book.find_by(id: params["book"]["id"])
+    render_not_found unless @book
   end
 end
