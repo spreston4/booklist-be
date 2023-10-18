@@ -8,7 +8,7 @@ class WishlistController < ApplicationController
 
   def add
     return unless @user && @book
-    if @user.wishlist.books.exists?(@book.id)
+    if book_exists?(@book.id)
       render_error("Book already exists on wishlist.")
     else
       @user.wishlist.books << @book
@@ -18,7 +18,7 @@ class WishlistController < ApplicationController
 
   def remove
     return unless @user && @book
-    if @user.wishlist.books.exists?(@book.id)
+    if book_exists?(@book.id)
       @user.wishlist.books.delete(@book)
       render_success("Book removed from wishlist.")
     else
@@ -36,5 +36,9 @@ class WishlistController < ApplicationController
   def set_book
     @book = Book.find_by(id: params.dig(:book, :id))
     render_not_found unless @book
+  end
+
+  def book_exists?(id)
+    @user.wishlist.books.exists?(id)
   end
 end

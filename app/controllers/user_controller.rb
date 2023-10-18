@@ -5,8 +5,7 @@ class UserController < ApplicationController
   end
 
   def create
-    puts("create called")
-    if User.find_by(email: params["user"]["email"])
+    if User.find_by(email: params.dig(:user, :email))
       render_duplicate_record
       return
     end
