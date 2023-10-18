@@ -1,6 +1,9 @@
 class UserController < ApplicationController
-  before_action :set_user
-  before_action :set_book, except: [:get_wishlist, :get_readlist]
+  before_action :set_user,
+  before_action :set_book, except: [:show, :get_wishlist, :get_readlist]
+
+  def show
+  end
   
   def get_wishlist
     wishlist_data = @user.wishlist.books
@@ -61,7 +64,7 @@ class UserController < ApplicationController
   private
 
   def set_user
-    @user = User.find_by(id: params["id"])
+    @user = User.includes(wishlist: :books, readlist: :books).find_by(id: params["id"])
     render_not_found unless @user
   end
 

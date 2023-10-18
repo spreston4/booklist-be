@@ -7,9 +7,9 @@ Rails.application.routes.draw do
   end
 
   resources :sessions, only: [:create]
-  resources :registrations, only: [:create]
-  resources :users do
+  resource :user, only: [:create] do
     member do
+      get 'show', to: 'user#show'
       get 'get_wishlist', to: 'user#get_wishlist'
       post 'add_to_wishlist', to: 'user#add_to_wishlist'
       delete 'remove_from_wishlist', to: 'user#remove_from_wishlist'
