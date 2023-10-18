@@ -1,72 +1,37 @@
 class UserController < ApplicationController
-  before_action :set_user
-  before_action :set_book, except: [:get_wishlist, :get_readlist]
-  
-  def get_wishlist
-    wishlist_data = @user.wishlist.books
-  
-    render json: {
-      books: wishlist_data
-    }
+  before_action :set_user, except: [:create]
+
+  def show
   end
 
-  def add_to_wishlist
-    return unless @user && @book
-    if @user.wishlist.books.exists?(@book.id)
-      render_error("Book already exists on wishlist.")
-    else
-      @user.wishlist.books << @book
-      render_success("Book successfully added to wishlist!")
+  def create
+    if User.find_by(email: params.dig(:user, :email))
+      render_duplicate_record
+      return
     end
-  end  
-  
-  def remove_from_wishlist
-    return unless @user && @book
-    if @user.wishlist.books.exists?(@book.id)
-      @user.wishlist.books.delete(@book)
-      render_success("Book removed from wishlist.")
-    else
-      render_error("Book does not exist on wishlist.")
-    end
-  end
+    
+    @user = User.new(user_params)
 
-  def get_readlist
-    readlistlist_data = @user.readlist.books
-  
-    render json: {
-      books: readlist_data
-    }
-  end
-
-  def add_to_readlist
-    return unless @user && @book
-    if @user.readlist.books.exists?(@book.id)
-      render_error("Book already exists on readlist.")
+    if @user.save
+      Wishlist.create(user: @user)
+      Readlist.create(user: @user)
+      session[:user_id] = @user.id
+      @status = :created
+      @message = "User successfully created"
     else
-      @user.readlist.books << @book
-      render_success("Book successfully added to readlist!")
-    end
-  end 
-
-  def remove_from_readlist
-    return unless @user && @book
-    if @user.readlist.books.exists?(@book.id)
-      @user.readlist.books.delete(@book)
-      render_success("Book removed from readlist.")
-    else
-      render_error("Book does not exist on readlist.")
+      @status = 500
+      @message = "Error creating User"
     end
   end
 
   private
 
-  def set_user
-    @user = User.find_by(id: params["id"])
-    render_not_found unless @user
+  def user_params
+    params.require(:user).permit(:email, :password, :password_confirmation)
   end
 
-  def set_book
-    @book = Book.find_by(id: params["book"]["id"])
-    render_not_found unless @book
+  def set_user
+    @user = User.includes(wishlist: :books, readlist: :books).find_by(id: params[:id])
+    render_not_found unless @user
   end
 end

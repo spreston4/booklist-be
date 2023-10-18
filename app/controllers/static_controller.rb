@@ -1,5 +1,5 @@
 class StaticController < ApplicationController
     def index
-        render json: {status: "Working"}
+        render json: {status: :ok}
     end    
 end

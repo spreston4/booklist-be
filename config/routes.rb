@@ -7,15 +7,15 @@ Rails.application.routes.draw do
   end
 
   resources :sessions, only: [:create]
-  resources :registrations, only: [:create]
-  resources :users do
+  resources :user, only: [:create] do
     member do
-      get 'get_wishlist', to: 'user#get_wishlist'
-      post 'add_to_wishlist', to: 'user#add_to_wishlist'
-      delete 'remove_from_wishlist', to: 'user#remove_from_wishlist'
-      get 'get_readlist', to: 'user#get_readlist'
-      post 'add_to_readlist', to: 'user#add_to_readlist'
-      delete 'remove_from_readlist', to: 'user#remove_from_readlist'
+      get 'show', to: 'user#show'
+      get 'get_wishlist', to: 'wishlist#index'
+      post 'add_to_wishlist', to: 'wishlist#add'
+      delete 'remove_from_wishlist', to: 'wishlist#remove'
+      get 'get_readlist', to: 'readlist#index'
+      post 'add_to_readlist', to: 'readlist#add'
+      delete 'remove_from_readlist', to: 'readlist#remove'
     end
   end
 
