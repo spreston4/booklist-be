@@ -1,8 +1,8 @@
 class WishlistController < ApplicationController
-  before_action :set_book, except: [:show]
+  before_action :set_book, except: [:index]
   before_action :set_user
 
-  def show
+  def index
     @wishlist_data = @user.wishlist.books
   end
 

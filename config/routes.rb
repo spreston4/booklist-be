@@ -10,12 +10,12 @@ Rails.application.routes.draw do
   resources :user, only: [:create] do
     member do
       get 'show', to: 'user#show'
-      get 'get_wishlist', to: 'wishlist#show'
+      get 'get_wishlist', to: 'wishlist#index'
       post 'add_to_wishlist', to: 'wishlist#add'
       delete 'remove_from_wishlist', to: 'wishlist#remove'
-      get 'get_readlist', to: 'user#get_readlist'
-      post 'add_to_readlist', to: 'user#add_to_readlist'
-      delete 'remove_from_readlist', to: 'user#remove_from_readlist'
+      get 'get_readlist', to: 'readlist#index'
+      post 'add_to_readlist', to: 'readlist#add'
+      delete 'remove_from_readlist', to: 'readlist#remove'
     end
   end
 
